@@ -51,12 +51,23 @@ export default function App() {
   const [searchedMovies, setSearchedMovies] = useState([])
   const [isSearchedSection, setSearchedSection] = useState(true)
   const [selectedId, setSelectedId] = useState(null)
-  const ref=useRef(null)
+  const [sortValue,setSortValue]=useState("recent")
   const [watchedMovie,setWatchedMovie]=useState(function(){
     const data=localStorage.getItem("Watched-movies")
     const movies=JSON.parse(data)
     return movies || []
   })
+  function sortTheOrder(){
+    sortValue === "recent" && setWatchedMovie(movie=>[...movie.sort((a,b)=>b.now-a.now)])
+    sortValue === "older" && setWatchedMovie(movie=>[...movie.sort((a,b)=>a.now-b.now)])
+    sortValue === "l-h-Imdb" && setWatchedMovie(movie=>[...movie.sort((a,b)=>a.imdbRating-b.imdbRating)])
+    sortValue === "h-l-Imdb" && setWatchedMovie(movie=>[...movie.sort((a,b)=>b.imdbRating-a.imdbRating)])
+    sortValue === "l-h-y" && setWatchedMovie(movie=>[...movie.sort((a,b)=>a.userRating-b.userRating)])
+    sortValue === "h-l-y" && setWatchedMovie(movie=>[...movie.sort((a,b)=>b.userRating-a.userRating)])
+  }
+  useEffect(function(){
+    sortTheOrder()
+  },[sortValue])
 
   useEffect(function(){
     localStorage.setItem("Watched-movies",JSON.stringify(watchedMovie))
@@ -69,7 +80,7 @@ export default function App() {
       try {
         setError("")
         setLoading(true)
-        const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`, { signal: controller.signal })
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`, { signal: controller.signal })
         // const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&i=${imdbID}`)
         if (!res.ok) throw new Error("Some error happened")
         const data = await res.json()
@@ -109,11 +120,14 @@ export default function App() {
           isSearchedSection ?
             <>
               <SearchedMovieBox error={error} isLoading={isLoading} movies={searchedMovies}
-                setSelectedId={setSelectedId} searchedMovies={searchedMovies} theRef={ref}></SearchedMovieBox>
-              <MovieDetails selectedId={selectedId} setSelectedId={setSelectedId} theRef={ref} setWatchedMovie={setWatchedMovie} watchedMovie={watchedMovie}></MovieDetails>
+                setSelectedId={setSelectedId} searchedMovies={searchedMovies} ></SearchedMovieBox>
+              <MovieDetails selectedId={selectedId} sortTheOrder={sortTheOrder} setSelectedId={setSelectedId} setWatchedMovie={setWatchedMovie} watchedMovie={watchedMovie}></MovieDetails>
             </> : 
             <WatchedMovieBox >
-                <p className="heading-title">Total: {watchedMovie.length} </p>
+              <div className="heading-title watched-title-bar">
+                <p>Total: {watchedMovie.length} </p>
+                <SortingSection sortValue={sortValue} setSortValue={setSortValue} ></SortingSection>
+              </div>
                 <WatchedMovieList watchedMovie={watchedMovie} setWatchedMovie={setWatchedMovie}></WatchedMovieList>
             </WatchedMovieBox>
         }
@@ -137,7 +151,8 @@ function NavBar({ children }) {
 function Logo() {
   return (
     <div className="logo">
-      <img src="/images/logo.png" alt=""></img>
+      {/* <img src="./images/logo.png" alt=""></img> */}
+      <span>🎬</span>
       <h3>SaveTheShow</h3>
     </div>
   )
@@ -157,7 +172,7 @@ function Search({ query, setQuery }) {
 function Loader() {
   return (
     <div className="loader">
-      <img src="./images/loader.png"></img>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><radialGradient id="a12" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="#FF156D"></stop><stop offset=".3" stop-color="#FF156D" stop-opacity=".9"></stop><stop offset=".6" stop-color="#FF156D" stop-opacity=".6"></stop><stop offset=".8" stop-color="#FF156D" stop-opacity=".3"></stop><stop offset="1" stop-color="#FF156D" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(#a12)" stroke-width="15" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="#FF156D" stroke-width="15" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>
     </div>
   );
 }
@@ -180,33 +195,30 @@ function WholeBox({ children }) {
     </div>
   )
 }
-function SearchedMovieBox({ error, isLoading, searchedMovies, movies, setSelectedId,theRef }) {
+function SearchedMovieBox({ error, isLoading, searchedMovies, movies, setSelectedId }) {
   return (
     <div className="search-movie-box movie-box ">
       <p className="heading-title">Results: </p>
       {!isLoading && !error && searchedMovies.length==0?<p className="no-results">No results found !</p>:"" }
       {isLoading && !error ? <Loader></Loader> : ""}
       {!isLoading && error ? <p className="error">🚫 {error}</p> : ""}
-      {!isLoading && !error ? <SearchedMovieList movies={movies} theRef={theRef} setSelectedId={setSelectedId}></SearchedMovieList> : ""}
+      {!isLoading && !error ? <SearchedMovieList movies={movies} setSelectedId={setSelectedId}></SearchedMovieList> : ""}
 
     </div>
   )
 }
-function SearchedMovieList({ movies, setSelectedId,theRef }) {
+function SearchedMovieList({ movies, setSelectedId }) {
   return (
     <ul className="search-movie-list">
-      {movies.map(movie => <SearchedMovie movie={movie} theRef={theRef} key={movie.imdbID} setSelectedId={setSelectedId}></SearchedMovie>)}
+      {movies.map(movie => <SearchedMovie movie={movie} key={movie.imdbID} setSelectedId={setSelectedId}></SearchedMovie>)}
     </ul>
   )
 }
-function SearchedMovie({ movie, setSelectedId,theRef }) {
+function SearchedMovie({ movie, setSelectedId, }) {
   function handleSelectedMovie(){
     setSelectedId(id=>{
-      if(id!=movie.imdbID){
-        if(window.innerWidth<743)
-          theRef?.current?.scrollIntoView({behavior:"smooth"})
+      if(id!=movie.imdbID)
         return movie.imdbID
-      }
       else 
         return null
     })
@@ -223,7 +235,7 @@ function SearchedMovie({ movie, setSelectedId,theRef }) {
   )
 }
 ///////////////////////
-function MovieDetails({ selectedId,setSelectedId,setWatchedMovie,watchedMovie }) {
+function MovieDetails({ selectedId,setSelectedId,setWatchedMovie,watchedMovie,sortTheOrder }) {
   const [isLoading, setLoading] = useState(false)
   const [selectedMovie, setSelectedMovie] = useState([])
   const [userRating,setUserRating]=useState(0)
@@ -242,11 +254,13 @@ function addWatchedMovie(){
   const newMovie={
     title,
     poster,
-    imdbRating,
+    imdbRating:Number(imdbRating),
     userRating,
-    imdbID
+    imdbID,
+    now:Date.now()
   }
   setWatchedMovie(movie=>[...movie,newMovie])
+  sortTheOrder()
   setSelectedId(null)
 }
 
@@ -284,7 +298,8 @@ function addWatchedMovie(){
         !selectedId?<p className="no-details">No details</p>:
         isLoading?<Loader></Loader>:<div className="selected-movie-details">
           
-        <img src="./images/back-button-svgrepo-com.svg" className="back-btn" onClick={()=>setSelectedId(null)}></img>
+        <p className="back-btn" onClick={()=>setSelectedId(null)}>&#8592;</p>
+        {/* <img src="/images/back-button-svgrepo-com.svg" className="back-btn" onClick={()=>setSelectedId(null)}></img> */}
         <div className="movie-info">
           <img src={poster}></img>
           <div className="information">
@@ -327,6 +342,22 @@ function WatchedMovieBox({children}) {
       
       {children}
     </div>
+  )
+}
+function SortingSection({sortValue,setSortValue}){
+
+  return(
+    <div className="sorting">Sort: 
+                  <select value={sortValue} onChange={(e)=>setSortValue(e.target.value)}className="selection-for-sort">
+                    <option value="recent">Recently watched</option>
+                    <option value="older">Least recently watched</option>
+                    <option value="l-h-Imdb">Low to high (IMDb)</option>
+                    <option value="h-l-Imdb">High to low (IMDb)</option>
+                    <option value="l-h-y">Low to high (Your's)</option>
+                    <option value="h-l-y">High to low (Your's)</option>
+                    <option></option>
+                  </select>
+                </div>
   )
 }
 function WatchedMovieList({watchedMovie,setWatchedMovie}) {
