@@ -185,7 +185,7 @@ function SearchedMovie({ movie, setSelectedId, }) {
       <div className="movie-preview">
         <h3>{movie.Title}</h3>
         <p>📅 <span>{movie.Year}</span></p>
-        <p>🎬 <span>{movie.Type}</span></p>
+        <p>🎬 <span>{(movie.Type)[0].toUpperCase()+movie.Type.slice(1)}</span></p>
       </div>
     </li>
   )
