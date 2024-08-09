@@ -270,7 +270,7 @@ function addWatchedMovie(){
     async function getMovieDetails() {
       try {
         setLoading(true)
-        const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&i=${selectedId}`, { signal: controller.signal })
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&i=${selectedId}`, { signal: controller.signal })
         if (!res.ok) throw new Error("Some error happened")
         const data = await res.json()
         console.log(data)
