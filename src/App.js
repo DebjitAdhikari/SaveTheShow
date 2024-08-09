@@ -1,48 +1,7 @@
 import { Children, useEffect, useRef, useState } from "react"
 import StarRating from "./StarRating";
-// const mediaData = [
-//   {
-//     Poster: "https://m.media-amazon.com/images/M/MV5BN2IzYzBiOTQtNGZmMi00NDI5LTgxMzMtN2EzZjA1NjhlOGMxXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg",
-//     Title: "Game of Thrones",
-//     Type: "series",
-//     Year: "2011–2019",
-//     imdbID: "tt0944947"
-//   },
-//   {
-//     Poster: "https://m.media-amazon.com/images/M/MV5BYWE3MDVkN2EtNjQ5MS00ZDQ4LTliNzYtMjc2YWMzMDEwMTA3XkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_SX300.jpg",
-//     Title: "Squid Game",
-//     Type: "series",
-//     Year: "2021–",
-//     imdbID: "tt10919420"
-//   },
-//   {
-//     Poster: "https://m.media-amazon.com/images/M/MV5BMTQwMzQ5Njk1MF5BMl5BanBnXkFtZTcwNjIxNzIxNw@@._V1_SX300.jpg",
-//     Title: "Sherlock Holmes: A Game of Shadows",
-//     Type: "movie",
-//     Year: "2011",
-//     imdbID: "tt1515091"
-//   }
-// ];
-const details = [
-  {
-    title: "Game of Thrones",
-    released: "17 Apr 2011",
-    runtime: "57 min",
-    genre: "Action, Adventure, Drama",
-    director: "N/A",
-    plot: "Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.",
-    language: "English",
-    poster: "https://m.media-amazon.com/images/M/MV5BN2IzYzBiOTQtNGZmMi00NDI5LTgxMzMtN2EzZjA1NjhlOGMxXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg",
-    imdbRating: "9.2",
-    imdbID: "tt0944947"
-  },
-];
-
 
 const API_KEY = "402d5b0"
-const movieName = "game"
-const imdbID = "tt0944947"
-
 
 export default function App() {
   const [query, setQuery] = useState("")
@@ -81,10 +40,8 @@ export default function App() {
         setError("")
         setLoading(true)
         const res = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`, { signal: controller.signal })
-        // const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&i=${imdbID}`)
         if (!res.ok) throw new Error("Some error happened")
         const data = await res.json()
-        console.log(data)
         if (data.Response === "False") throw new Error("Movie not found")
         const movieData = data.Search
         setSearchedMovies(movieData)
@@ -151,7 +108,6 @@ function NavBar({ children }) {
 function Logo() {
   return (
     <div className="logo">
-      {/* <img src="./images/logo.png" alt=""></img> */}
       <span>🎬</span>
       <h3>SaveTheShow</h3>
     </div>
@@ -234,7 +190,7 @@ function SearchedMovie({ movie, setSelectedId, }) {
     </li>
   )
 }
-///////////////////////
+
 function MovieDetails({ selectedId,setSelectedId,setWatchedMovie,watchedMovie,sortTheOrder }) {
   const [isLoading, setLoading] = useState(false)
   const [selectedMovie, setSelectedMovie] = useState([])
@@ -273,7 +229,6 @@ function addWatchedMovie(){
         const res = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&i=${selectedId}`, { signal: controller.signal })
         if (!res.ok) throw new Error("Some error happened")
         const data = await res.json()
-        console.log(data)
         setSelectedMovie(data)
         if(data.Title)
           document.title=data.Title
@@ -299,7 +254,6 @@ function addWatchedMovie(){
         isLoading?<Loader></Loader>:<div className="selected-movie-details">
           
         <p className="back-btn" onClick={()=>setSelectedId(null)}>&#8592;</p>
-        {/* <img src="/images/back-button-svgrepo-com.svg" className="back-btn" onClick={()=>setSelectedId(null)}></img> */}
         <div className="movie-info">
           <img src={poster}></img>
           <div className="information">
@@ -335,7 +289,7 @@ function addWatchedMovie(){
     </div>
   )
 }
-///////////////////////
+
 function WatchedMovieBox({children}) {
   return (
     <div className="watched-movie-box movie-box ">
@@ -355,7 +309,6 @@ function SortingSection({sortValue,setSortValue}){
                     <option value="h-l-Imdb">High to low (IMDb)</option>
                     <option value="l-h-y">Low to high (Your's)</option>
                     <option value="h-l-y">High to low (Your's)</option>
-                    <option></option>
                   </select>
                 </div>
   )

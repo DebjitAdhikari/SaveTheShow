@@ -2,12 +2,10 @@ body {
   margin: 0;
   font-family: "Roboto";
   background: #222831;
-  /* 5A639C  45474B */
 }
 .main{
   min-height: calc(100vh-170px);
   margin-top: 120px;
-  /* background-color: #fff; */
 }
 .nav-bar{
   display: flex;
@@ -96,7 +94,6 @@ body {
   display: flex;
   max-width: 700px;
   margin:auto;
-  /* background-color: #31363F; */
 
 }
 .box-hidden{
@@ -125,32 +122,12 @@ body {
   margin: auto;
   width: 60px;
   margin-top: 30px;
-  /* animation: rotate 1s infinite; */
 }
-/* .loader img{
-  width: 50px;
-  margin: auto;
-}
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-} */
-
 .whole-box .heading-title{
-  /* margin-top: 2px;
-  padding:0 5px;
-  color:#9290C3;
-  border-bottom: 1px solid #9290C3;
-  margin-bottom: 0; */
-  
   position: sticky;
   top: 0;
-  background-color: #31363F; /* Ensure background color is set to cover any underlying content */
-  z-index: 10; /* Ensure the heading stays above other content */
+  background-color: #31363F; 
+  z-index: 10;
   padding: 0 5px;
   color: #9290C3;
   border-bottom: 1px solid #9290C3;
@@ -232,11 +209,9 @@ margin-top: 0;
 }
 .movie-info h3{
   color: #DDE6ED;
-  /* font-family: "IBM Plex Mono", monospace; */
   font-family: "Roboto";
   font-weight: 600;
   font-size: 20px;
-  /* font-style: normal; */
 }
 .movie-info p{
   color: #DDE6ED;
@@ -329,23 +304,17 @@ margin-top: 0;
   cursor: pointer;
 }
 footer {
-  /* background-color: #222831; */
-  /* background-color: black; */
-  /* height: 50px; */
   background-color: #484848;
   color: #DDE6ED;
   margin-top: 110px;
   text-align: center;
   padding: 10px 0;
-  /* position: fixed; */
   width: 100%;
   bottom: 0;
 }
 
 @media (max-width: 1000px){
   .logo span{
-    /* width: 50px;
-    height: 50px; */
     font-size: 2rem;
   }
   .logo h3{
@@ -378,8 +347,7 @@ footer {
     font-weight: 700;
   }
   .whole-box{
-    max-width: 400px;
-    
+    max-width: 400px;    
     flex-wrap: wrap-reverse;
     gap: 20px;
   }
@@ -401,7 +369,6 @@ footer {
 
 @media (max-width: 564px) {
   .logo span{
-    /* width: 40px; */
     font-size: 2rem;
   }
   .logo h3{
@@ -415,14 +382,10 @@ footer {
   .nav-bar p{
     font-size: 1rem;
     font-weight: 700;
-  }
-  
+  }  
 }
 
 @media (max-width:520px){
-  /* .logo span{
-    font-size: 1rem;
-  } */
   .logo h3{
     font-size: 0.9rem;
   }
@@ -461,8 +424,6 @@ footer {
     gap: 0;
   }
   .logo span{
-    /* width:30px ;
-    height: 40px; */
     font-size: 1.2rem;
   }
   .logo h3{
@@ -477,8 +438,6 @@ footer {
 }
 @media (max-width: 351px){
   .logo span{
-    /* width: 20px;
-    height: 30px; */
     margin-right: 0;
   }
   .logo h3{
@@ -493,8 +452,7 @@ footer {
   }
   .search svg{
     width: 30px;
-  }
-  
+  }  
 }
 @media (max-width: 296px) {
   .search input{
